@@ -12,6 +12,11 @@ import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
+const val KEY_REVENUE = "key_revenue"
+const val KEY_DESSERT_SOLD = "key_dessert_sold"
+const val KEY_TIMER_TICKS = "key_timer_ticks"
+
+
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -53,13 +58,19 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         super.onCreate(savedInstanceState)
         Timber.i("onCreate() has been instantiated!")
 
-        timer = DessertTimer()
+        timer = DessertTimer(this.lifecycle)
 
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
+        }
+
+        if (savedInstanceState != null) {
+            revenue = savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD)
+            timer.secondsCount = savedInstanceState.getInt(KEY_TIMER_TICKS)
         }
 
         // Set the TextViews to the right values
@@ -144,7 +155,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStart() {
         super.onStart()
         Timber.i("onStart() has been instantiated!")
-        timer.startTimer()
     }
 
     override fun onRestart() {
@@ -166,7 +176,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStop() {
         super.onStop()
         Timber.i("onStop() has been instantiated!")
-        timer.stopTimer()
     }
 
     override fun onDestroy() {
@@ -174,4 +183,16 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         Timber.i("onDestroy() has been instantiated!")
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        Timber.i("onSaveInstanceState() has been instantiated!")
+        outState?.putInt(KEY_REVENUE, revenue)
+        outState?.putInt(KEY_DESSERT_SOLD, dessertsSold)
+        outState?.putInt(KEY_TIMER_TICKS, timer.secondsCount)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Timber.i("onRestoreInstanceState() has been instantiated!")
+    }
 }
