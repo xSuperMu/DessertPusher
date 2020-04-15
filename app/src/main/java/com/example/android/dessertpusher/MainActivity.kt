@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
@@ -16,8 +15,7 @@ const val KEY_REVENUE = "key_revenue"
 const val KEY_DESSERT_SOLD = "key_dessert_sold"
 const val KEY_TIMER_TICKS = "key_timer_ticks"
 
-
-class MainActivity : AppCompatActivity(), LifecycleObserver {
+class MainActivity : AppCompatActivity() {
 
     private var revenue = 0
     private var dessertsSold = 0
@@ -186,9 +184,11 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         Timber.i("onSaveInstanceState() has been instantiated!")
-        outState?.putInt(KEY_REVENUE, revenue)
-        outState?.putInt(KEY_DESSERT_SOLD, dessertsSold)
-        outState?.putInt(KEY_TIMER_TICKS, timer.secondsCount)
+        outState?.run {
+            putInt(KEY_REVENUE, revenue)
+            putInt(KEY_DESSERT_SOLD, dessertsSold)
+            putInt(KEY_TIMER_TICKS, timer.secondsCount)
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

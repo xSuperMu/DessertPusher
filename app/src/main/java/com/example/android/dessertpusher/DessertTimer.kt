@@ -23,7 +23,6 @@ import timber.log.Timber
  */
 class DessertTimer(lifecycle: Lifecycle) : LifecycleObserver {
 
-
     init {
         lifecycle.addObserver(this)
     }
